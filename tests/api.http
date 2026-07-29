@@ -1,0 +1,28 @@
+### ============================================
+### Home Control API
+### ============================================
+
+@host = http://localhost
+
+### API Root
+GET {{host}}/api
+
+###
+
+### Swagger UI
+GET {{host}}/docs
+
+###
+
+### ReDoc
+GET {{host}}/redoc
+
+###
+
+### OpenAPI Specification
+GET {{host}}/openapi.json
+
+###
+
+### Test d'une route inexistante (doit renvoyer 404)
+GET {{host}}/api/does-not-exist

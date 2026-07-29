@@ -1,0 +1,73 @@
+services:
+  mysql:
+    image: mysql:8.4
+    container_name: home-control-mysql
+    restart: unless-stopped
+
+    env_file:
+      - .env
+
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+
+    volumes:
+      - mysql_data:/var/lib/mysql
+    
+    networks:
+      - home_control_network
+
+  backend:
+    build: ./backend
+    container_name: home-control-backend
+    restart: unless-stopped
+
+    env_file:
+      - .env
+
+    volumes:
+      - ./backend:/app
+
+    depends_on:
+      - mysql
+
+    networks:
+      - home_control_network
+
+  frontend:
+    build: ./frontend
+    container_name: home-control-frontend
+    restart: unless-stopped
+
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+
+    command: npm run dev -- --host
+
+    networks:
+      - home_control_network
+
+  nginx:
+    build: ./nginx
+    container_name: home-control-nginx
+    restart: unless-stopped
+
+    depends_on:
+      - frontend
+      - backend
+
+    ports:
+      - "80:80"
+
+    networks:
+      - home_control_network
+
+volumes:
+  mysql_data:
+
+networks:
+  home_control_network:
+    driver: bridge

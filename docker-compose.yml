@@ -1,4 +1,31 @@
 services:
+  mqtt:
+    image: eclipse-mosquitto:2
+    container_name: home-control-mqtt
+    restart: unless-stopped
+    ports:
+      - "1883:1883"
+    volumes:
+      - ./mqtt/config:/mosquitto/config
+      - ./mqtt/data:/mosquitto/data
+      - ./mqtt/log:/mosquitto/log
+    networks:
+      - home_control_network
+
+  zigbee:
+    image: koenkk/zigbee2mqtt
+    container_name: home-control-zigbee
+    restart: unless-stopped
+    depends_on:
+      - mqtt
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./zigbee/data:/app/data
+    devices:
+      - /dev/ttyUSB0:/dev/ttyUSB0
+    networks:
+      - home_control_network
   mysql:
     image: mysql:8.4
     container_name: home-control-mysql
@@ -31,6 +58,7 @@ services:
       - ./backend:/app
 
     depends_on:
+      - mqtt
       - mysql
 
     networks:

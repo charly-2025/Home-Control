@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import { Outlet, useLocation } from "react-router-dom";
 
 import { AppBar, Box, Toolbar, Typography } from "@mui/material";
@@ -8,7 +8,7 @@ import Sidebar, {
   DRAWER_WIDTH_COLLAPSED,
 } from "../components/Sidebar";
 
-import { connect, disconnect } from "../websocket/socket";
+import { DevicesProvider } from "../context/DevicesContext";
 
 const PAGE_TITLES = {
   "/": "Dashboard",
@@ -24,17 +24,8 @@ export default function MainLayout() {
 
   const [sidebarOpen, setSidebarOpen] = useState(true);
 
-  useEffect(() => {
-    connect((message) => {
-      console.log(message);
-    });
-
-    return () => {
-      disconnect();
-    };
-  }, []);
-
   const drawerWidth = sidebarOpen ? DRAWER_WIDTH : DRAWER_WIDTH_COLLAPSED;
+  const isDashboard = location.pathname === "/";
 
   const pageTitle = useMemo(() => {
     return PAGE_TITLES[location.pathname] ?? "";
@@ -98,7 +89,7 @@ export default function MainLayout() {
           sx={{
             flexGrow: 1,
             overflow: "auto",
-            p: 3,
+            p: isDashboard ? 0 : 3,
             transition: (theme) =>
               theme.transitions.create(["margin", "width"], {
                 easing: theme.transitions.easing.easeInOut,
@@ -106,7 +97,9 @@ export default function MainLayout() {
               }),
           }}
         >
-          <Outlet />
+          <DevicesProvider>
+            <Outlet />
+          </DevicesProvider>
         </Box>
       </Box>
     </Box>

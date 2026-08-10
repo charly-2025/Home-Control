@@ -97,9 +97,11 @@ function NavItem({ page, open, selected }) {
 
       <ListItemText
         primary={page.title}
-        primaryTypographyProps={{
-          noWrap: true,
-          fontWeight: 500,
+        slotProps={{
+          primary: {
+            noWrap: true,
+            fontWeight: 500,
+          },
         }}
         sx={{
           m: 0,

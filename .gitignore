@@ -46,3 +46,10 @@ build/
 # Misc
 *.swp
 *.swo
+
+# Notes
+notes/
+
+# Database
+*.sqlite
+*.db

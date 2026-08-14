@@ -89,7 +89,7 @@ export default function Dashboard() {
                             </Typography>
                         </Box>
 
-                        {device.device_type === "switch" && (
+                        {["switch", "light"].includes(device.device_type)&& (
                             <Box
                                 sx={{
                                     display: "flex",

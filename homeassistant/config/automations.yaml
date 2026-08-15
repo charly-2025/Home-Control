@@ -1,1 +1,16 @@
-[]
+- id: '1786760424892'
+  alias: Éteindre tout si absent
+  triggers:
+  - entity_id: person.charly
+    to: not_home
+    for:
+      minutes: 5
+    trigger: state
+  actions:
+  - action: light.turn_off
+    target:
+      entity_id: all
+  - action: switch.turn_off
+    target:
+      entity_id: all
+  mode: single

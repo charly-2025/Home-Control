@@ -1,0 +1,4 @@
+wyoming
+sounddevice
+numpy
+requests

@@ -1,5 +1,55 @@
 services:
+  vocal-assistant:
+    build: ./vocal-assistant
+    container_name: home-control-vocal-assistant
+    restart: unless-stopped
+    env_file:
+      - .env
+    environment:
+      OLLAMA_HOST: http://ollama:11434
+      OLLAMA_MODEL: qwen2.5:7b
+    depends_on:
+      - ollama
+      - mqtt
+      - backend
+    ports:
+      - "8090:8090"
+    networks:
+      - home_control_network
 
+  whisper:
+    image: rhasspy/wyoming-whisper
+    container_name: home-control-whisper
+    restart: unless-stopped
+    command: --model small --language fr
+    ports:
+      - "10300:10300"
+    volumes:
+      - whisper_data:/data
+    networks:
+      - home_control_network
+  piper:
+    image: rhasspy/wyoming-piper
+    container_name: home-control-piper
+    restart: unless-stopped
+    command: --voice fr_FR-siwis-medium
+    ports:
+      - "10200:10200"
+    volumes:
+      - piper_data:/data
+    networks:
+      - home_control_network
+
+  ollama:
+    image: ollama/ollama
+    container_name: home-control-ollama
+    restart: unless-stopped
+    ports:
+      - "11434:11434"
+    volumes:
+      - ollama_data:/root/.ollama
+    networks:
+      - home_control_network
   homeassistant:
     image: ghcr.io/home-assistant/home-assistant:stable
     container_name: home-control-homeassistant
@@ -42,7 +92,7 @@ services:
       - /dev/ttyUSB0:/dev/ttyUSB0
     networks:
       - home_control_network
-      
+
   mysql:
     image: mysql:8.4
     container_name: home-control-mysql
@@ -59,7 +109,7 @@ services:
 
     volumes:
       - mysql_data:/var/lib/mysql
-    
+
     networks:
       - home_control_network
 
@@ -112,6 +162,9 @@ services:
 
 volumes:
   mysql_data:
+  ollama_data:
+  whisper_data:
+  piper_data:
 
 networks:
   home_control_network:

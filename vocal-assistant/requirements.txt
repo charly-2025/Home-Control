@@ -1,0 +1,6 @@
+fastapi
+uvicorn[standard]
+pydantic
+ollama
+requests
+paho-mqtt

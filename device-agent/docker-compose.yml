@@ -1,0 +1,12 @@
+services:
+  openwakeword:
+    image: rhasspy/wyoming-openwakeword
+    command: --threshold 0.3
+    container_name: agent-openwakeword
+    restart: unless-stopped
+    ports:
+      - "10400:10400"
+
+volumes:
+  whisper_data:
+  piper_data:

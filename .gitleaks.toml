@@ -1,0 +1,25 @@
+# Default gitleaks rules + homelab specific ones.
+[extend]
+useDefault = true
+
+[[rules]]
+id = "tailscale-hostname"
+description = "Real Tailscale MagicDNS hostname (use HOMELAB_HOST in .env instead)"
+regex = '''[a-z0-9-]+\.(?:tail[0-9a-f]{6})\.ts\.net'''
+
+[[rules]]
+id = "tailscale-ip"
+description = "Tailscale IPv4 address (keep it in .env)"
+regex = '''\b100\.(?:6[4-9]|[7-9][0-9]|1[01][0-9]|12[0-7])\.[0-9]{1,3}\.[0-9]{1,3}\b'''
+
+[[rules]]
+id = "zigbee-network-key"
+description = "Zigbee2MQTT network key (must stay in zigbee/data, ignored by git)"
+regex = '''network_key:\s*\n\s*-\s*[0-9]+'''
+
+[[rules]]
+id = "mac-address"
+description = "Hardware MAC address (keep it in .env)"
+regex = '''\b(?:[0-9A-Fa-f]{2}:){5}[0-9A-Fa-f]{2}\b'''
+[rules.allowlist]
+regexes = ['''(?i)AA:BB:CC:DD:EE:FF''', '''00:00:00:00:00:00''']

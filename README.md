@@ -45,7 +45,7 @@ into device actions with speech-to-text, a local LLM and text-to-speech.
 | `frontend/` | React dashboard |
 | `vocal-assistant/` | Voice command API (LLM intent parsing, MQTT actions) |
 | `device-agent/` | Microphone client with wake word detection |
-| `zigbee/` | Zigbee2MQTT configuration template |
+| `zigbee/` | Zigbee2MQTT configuration template (runtime data lives in `zigbee/data/`, ignored by git) |
 | `mqtt/` | Mosquitto configuration |
 | `homeassistant/` | Home Assistant configuration and blueprints |
 | `nginx/` | Reverse proxy |
@@ -56,7 +56,9 @@ Requirements: Docker, Docker Compose and a Zigbee coordinator (tested with a
 Z-Stack USB dongle on `/dev/ttyUSB0`).
 
 ```bash
-cp .env.example .env      # then fill in your own values
+cp .env.example .env                                              # then fill in your own values
+mkdir -p zigbee/data
+cp zigbee/configuration.example.yaml zigbee/data/configuration.yaml
 docker compose up -d --build
 ```
 
@@ -64,14 +66,24 @@ docker compose up -d --build
 - Home Assistant: `http://localhost:8123`
 - Zigbee2MQTT frontend: `http://localhost:8080`
 
-Zigbee network keys are generated on first start (`GENERATE` in
-`zigbee/data/configuration.yaml`) and stay on your machine.
+On first start, Zigbee2MQTT generates the network keys (`GENERATE` in the
+template) inside `zigbee/data/`. Pair your devices from its frontend: they then
+appear automatically in the dashboard and in the voice assistant.
 
-## Security notes
+## Security
 
-- No secret is committed: credentials live in `.env` (ignored by git).
-- Runtime data (Zigbee keys, coordinator backups, Home Assistant database and
-  logs) is ignored by git.
+- **No secret in git**: credentials live in `.env`, and every runtime folder
+  (Zigbee keys and coordinator backups, Home Assistant database, storage and
+  logs, Mosquitto data, audio recordings) is ignored.
+- **Secret scanning**: [gitleaks](https://github.com/gitleaks/gitleaks) runs on
+  every push and pull request (`.github/workflows/secret-scan.yml`), with extra
+  rules for Zigbee network keys, Tailscale addresses and MAC addresses
+  (`.gitleaks.toml`).
+- **Local hook**: enable the same check before each commit with
+  `pip install pre-commit && pre-commit install`.
+- Authentication uses short-lived JWT access tokens and refresh tokens, with
+  role-based access for user management, and everything runs on the local
+  network.
 
 ## License
 

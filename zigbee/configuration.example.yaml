@@ -1,5 +1,7 @@
-# Zigbee2MQTT configuration (public template).
-# Network keys are generated on first start and must never be committed.
+# Zigbee2MQTT configuration template.
+# First setup: cp zigbee/configuration.example.yaml zigbee/data/configuration.yaml
+# Zigbee2MQTT generates the network keys on first start, inside zigbee/data/,
+# which is ignored by git: they never end up in the repository.
 homeassistant:
   enabled: true
 mqtt:

@@ -57,11 +57,19 @@ notes/
 # Home Assistant
 .storage/
 # Zigbee2MQTT runtime data (network keys, coordinator backups, device state)
-zigbee/data/*
-!zigbee/data/configuration.yaml
+# Copy zigbee/configuration.example.yaml to zigbee/data/configuration.yaml on first setup
+zigbee/data/
+
+# Mosquitto runtime data
+mqtt/data/
+mqtt/log/
 
 # Home Assistant runtime files
+homeassistant/config/.storage/
+homeassistant/config/.cloud/
 homeassistant/config/.cache/
+homeassistant/config/deps/
+homeassistant/config/tts/
 homeassistant/config/.ha_run.lock
 homeassistant/config/secrets.yaml
 homeassistant/config/*.log*

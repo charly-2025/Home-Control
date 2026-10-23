@@ -56,3 +56,16 @@ notes/
 
 # Home Assistant
 .storage/
+# Zigbee2MQTT runtime data (network keys, coordinator backups, device state)
+zigbee/data/*
+!zigbee/data/configuration.yaml
+
+# Home Assistant runtime files
+homeassistant/config/.cache/
+homeassistant/config/.ha_run.lock
+homeassistant/config/secrets.yaml
+homeassistant/config/*.log*
+homeassistant/config/*.db*
+
+# Audio debug recordings
+*.wav

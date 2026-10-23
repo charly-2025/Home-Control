@@ -1,0 +1,19 @@
+# Zigbee2MQTT configuration (public template).
+# Network keys are generated on first start and must never be committed.
+homeassistant:
+  enabled: true
+mqtt:
+  server: mqtt://mqtt:1883
+serial:
+  port: /dev/ttyUSB0
+  adapter: zstack
+frontend:
+  enabled: true
+advanced:
+  network_key: GENERATE
+  pan_id: GENERATE
+  ext_pan_id: GENERATE
+device_options: {}
+devices: {}
+groups: {}
+version: 5
